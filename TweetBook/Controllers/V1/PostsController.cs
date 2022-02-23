@@ -5,7 +5,6 @@ using TweetBook.Domain;
 namespace TweetBook.Controllers
 {
     public class PostsController :ControllerBase
-
     {
         private List<Post> _posts;
         public PostsController()
