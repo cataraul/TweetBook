@@ -7,9 +7,8 @@ using TweetBook.Domain;
 namespace TweetBook.Controllers
 {
     public class PostsController :ControllerBase
-
     {
-        private List<Post> _posts;
+        private IList<Post> _posts;
         public PostsController()
         {
             _posts = new List<Post>();
@@ -22,7 +21,6 @@ namespace TweetBook.Controllers
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public IActionResult GetAll()
         {
-
             return Ok(_posts);
         }
 
