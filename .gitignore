@@ -49,3 +49,8 @@ Thumbs.db
 .vs
 *.user
 .vs/TweetBook/v17/.suo
+*.dll
+*.pdb
+*.pdb
+.vs/TweetBook/v17/.suo
+*.sentinel
