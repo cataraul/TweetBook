@@ -3,12 +3,14 @@ using TweetBook.Contract;
 using TweetBook.Contract.V1.Requests;
 using TweetBook.Contract.V1.Responses;
 using TweetBook.Domain;
+using TweetBook.Services;
 
 namespace TweetBook.Controllers
 {
     public class PostsController :ControllerBase
+
     {
-        private IList<Post> _posts;
+        private List<Post> _posts;
         public PostsController()
         {
             _posts = new List<Post>();
@@ -21,6 +23,7 @@ namespace TweetBook.Controllers
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public IActionResult GetAll()
         {
+
             return Ok(_posts);
         }
 
@@ -30,16 +33,16 @@ namespace TweetBook.Controllers
 
             var post = new Post { Id = postRequest.Id };
 
-            if(string.IsNullOrEmpty(post.Id))
-                post.Id = Guid.NewGuid().ToString();
-            
-            _posts.Add(post);
+            if (post.Id != Guid.Empty)
+                post.Id = Guid.NewGuid();
+
+            _postService.GetPosts().Add(post);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
 
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{postId}", post.Id);
 
-           
+            var response = new PostResponse { Id = post.Id };
 
             return Created(locationUri,post);
         }
