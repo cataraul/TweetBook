@@ -72,3 +72,5 @@ TestResult.xml
 Version.cs
 Version.h
 Version.cpp
+.vs/TweetBook/v17/.suo
+.editorconfig
