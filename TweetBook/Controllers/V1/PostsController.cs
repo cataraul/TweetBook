@@ -39,7 +39,7 @@ namespace TweetBook.Controllers
 
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{postId}", post.Id);
 
-            var response = new PostResponse { Id = post.Id };
+           
 
             return Created(locationUri,post);
         }
