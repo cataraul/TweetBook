@@ -19,7 +19,6 @@ namespace TweetBook.Controllers
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public IActionResult GetAll()
         {
-
             return Ok(_posts);
         }
     }
