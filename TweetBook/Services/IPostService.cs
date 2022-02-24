@@ -8,8 +8,8 @@ namespace TweetBook.Services
 
        public Post GetPostById(Guid postId);
 
-        bool UpdatePost(Post postToUpdate);
+       public bool UpdatePost(Post postToUpdate);
 
-        bool DeletePost(Guid postId);
+       public bool DeletePost(Guid postId);
     }
 }
