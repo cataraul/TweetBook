@@ -78,3 +78,4 @@ Version.cpp
 *.json
 *.v1
 .vs/TweetBook/v17/.suo
+.vs/TweetBook/DesignTimeBuild/.dtbcache.v2
