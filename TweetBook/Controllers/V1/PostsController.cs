@@ -12,12 +12,6 @@ namespace TweetBook.Controllers
     {
         private readonly IPostService _postService;
         public PostsController(IPostService postService)
-
-    public class PostsController :ControllerBase
-    {
-        private IList<Post> _posts;
-        public PostsController()
-
         {
             _postService = postService;
         }
@@ -39,9 +33,6 @@ namespace TweetBook.Controllers
                 return NotFound();
 
             return Ok(post);
-
-            return Ok(_posts);
-
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
@@ -56,7 +47,6 @@ namespace TweetBook.Controllers
             _postService.GetPosts().Add(post);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-
 
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{postId}", post.Id.ToString());
 
