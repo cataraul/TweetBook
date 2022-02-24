@@ -74,3 +74,7 @@ Version.h
 Version.cpp
 .vs/TweetBook/v17/.suo
 .editorconfig
+*.v2
+*.json
+*.v1
+.vs/TweetBook/v17/.suo
