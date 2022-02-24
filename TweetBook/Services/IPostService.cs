@@ -4,12 +4,14 @@ namespace TweetBook.Services
 {
     public interface IPostService
     {
-       public List<Post> GetPosts();
+        public Task<List<Post>> GetPostsAsync();
 
-       public Post GetPostById(Guid postId);
+       public Task<Post> GetPostByIdAsync(Guid postId);
 
-       public bool UpdatePost(Post postToUpdate);
+        public Task<bool> CreatePostAsync(Post post);
 
-       public bool DeletePost(Guid postId);
+        public Task<bool> UpdatePostAsync(Post postToUpdate);
+
+       public Task<bool> DeletePostAsync(Guid postId);
     }
 }

@@ -1,12 +1,18 @@
-﻿using TweetBook.Services;
+﻿global using TweetBook.Data;
+global using TweetBook.Services;
+global using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddSingleton<IPostService, PostService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.AddControllers();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<DataContext>(options =>options.UseSqlite(connectionString));
+
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
