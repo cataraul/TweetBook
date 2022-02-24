@@ -11,7 +11,6 @@ namespace TweetBook.Controllers
     {
         private readonly IPostService _postService;
         public PostsController(IPostService postService)
-
         {
             _postService = postService;
         }
@@ -19,14 +18,12 @@ namespace TweetBook.Controllers
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public IActionResult GetAll()
         {
-
             return Ok(_postService.GetPosts());
         }
 
         [HttpPut(ApiRoutes.Posts.Update)]
         public IActionResult Update([FromRoute] Guid postId,[FromBody] UpdatePostRequest request)
         {
-
             var post = new Post
             {
                 Id = postId,
@@ -39,7 +36,6 @@ namespace TweetBook.Controllers
                 return Ok(post);
 
             return NotFound();
-
         }
 
         [HttpDelete(ApiRoutes.Posts.Delete)]
