@@ -4,8 +4,8 @@ namespace TweetBook.Services
 {
     public interface IPostService
     {
-        List<Post> GetPosts();
+       public List<Post> GetPosts();
 
-        Post GetPostById(Guid postId);
+       public Post GetPostById(Guid postId);
     }
 }
