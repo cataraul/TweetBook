@@ -11,7 +11,6 @@ namespace TweetBook.Controllers
     {
         private readonly IPostService _postService;
         public PostsController(IPostService postService)
-
         {
             _postService = postService;
         }
