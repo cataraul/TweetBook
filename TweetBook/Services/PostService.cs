@@ -29,7 +29,5 @@ namespace TweetBook.Services
         {
             return _posts.SingleOrDefault(x => x.Id == postId);
         }
-
-       
     }
 }
