@@ -41,7 +41,7 @@ namespace TweetBook.Controllers
 
             var post = new Post { Id = postRequest.Id };
 
-            if (post.Id != Guid.Empty)
+            if (post.Id == Guid.Empty)
                 post.Id = Guid.NewGuid();
 
             _postService.GetPosts().Add(post);
