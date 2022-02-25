@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +18,13 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>options.UseSqlite(connectionString));
 
+builder.Services.AddScoped<IIdentityService, IdentityService>();
 
 //Bearer Token Configuration
 var jwtSettings = new JwtSettings();
 builder.Configuration.Bind(key:nameof(jwtSettings),jwtSettings);
 builder.Services.AddSingleton(jwtSettings);
+
 
 builder.Services.AddAuthentication(configureOptions: x =>
 {
