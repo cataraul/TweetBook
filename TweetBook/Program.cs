@@ -19,7 +19,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DataContext>(options =>options.UseSqlite(connectionString));
 
 builder.Services.AddScoped<IIdentityService, IdentityService>();
-
+builder.Services.AddMvc();
+builder.Services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<DataContext>();
 //Bearer Token Configuration
 var jwtSettings = new JwtSettings();
 builder.Configuration.Bind(key:nameof(jwtSettings),jwtSettings);
