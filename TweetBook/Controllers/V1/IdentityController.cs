@@ -5,7 +5,6 @@ using TweetBook.Contract.V1.Responses;
 
 namespace TweetBook.Controllers.V1
 {
-
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
@@ -14,6 +13,7 @@ namespace TweetBook.Controllers.V1
         {
             _identityService = identityService;
         }
+
         [HttpPost(ApiRoutes.Identity.Register)]
         public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
         {
@@ -40,6 +40,7 @@ namespace TweetBook.Controllers.V1
                 Token = authResponse.Token,
             });
         }
+
         [HttpPost(ApiRoutes.Identity.Login)]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
