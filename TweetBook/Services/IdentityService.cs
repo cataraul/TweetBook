@@ -89,7 +89,7 @@ namespace TweetBook.Services
 
             if (expiryDateTimeUtc > DateTime.UtcNow)
             {
-                return new AuthenticationResult { Errors = new[] { "This token hasn't epired yes" } };
+                return new AuthenticationResult { Errors = new[] { "This token hasn't epired yet" } };
             }
 
             var jti = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
