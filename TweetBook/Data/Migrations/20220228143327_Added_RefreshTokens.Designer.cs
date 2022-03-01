@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TweetBook.Data;
 
@@ -10,9 +11,10 @@ using TweetBook.Data;
 namespace TweetBook.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220228143327_Added_RefreshTokens")]
+    partial class Added_RefreshTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
@@ -233,13 +235,12 @@ namespace TweetBook.Data.Migrations
             modelBuilder.Entity("TweetBook.Domain.RefreshToken", b =>
                 {
                     b.Property<string>("Token")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime>("ExpireDate")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Invalidated")
