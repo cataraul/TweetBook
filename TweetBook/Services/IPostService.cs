@@ -3,8 +3,8 @@
 namespace TweetBook.Services
 {
     public interface IPostService
-    {
-       public Task<List<Post>> GetPostsAsync();
+    { 
+       public Task<List<Post>> GetAllAsync();
 
        public Task<Post> GetPostByIdAsync(Guid postId);
 
