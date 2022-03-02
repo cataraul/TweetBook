@@ -33,8 +33,11 @@ namespace TweetBook.Services
                     Errors = new[] { "User with this email address already exists" }
                 };
             }
+
+            var newUserId = Guid.NewGuid();
             var newUser = new IdentityUser
             {
+                Id=newUserId.ToString(),
                 Email = email,
                 UserName = email,
             };
@@ -48,6 +51,9 @@ namespace TweetBook.Services
                     Errors = createdUser.Errors.Select(x => x.Description)
                 };
             }
+
+            await _userManager.AddClaimAsync(newUser, new Claim("tags.view", "true"));
+
             return await GenerateAuthenticationResultForUserAsync(newUser);
         }
 
@@ -159,15 +165,22 @@ namespace TweetBook.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
+
+            var claims = new List<Claim>
                 {
                     new Claim(JwtRegisteredClaimNames.Sub,user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email,user.Email),
                     new Claim(type:"id",user.Id)
-                }),
+                };
+
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            claims.AddRange(userClaims);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(_jwtSettings.TokenLifetime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             };

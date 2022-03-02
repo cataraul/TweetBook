@@ -50,6 +50,9 @@ builder.Services.AddAuthentication(configureOptions: x =>
         x.TokenValidationParameters = tokenValidationParameters;
     });
 
+builder.Services.AddAuthorization(options=>{
+    options.AddPolicy("TagViewer", builder => builder.RequireClaim("tags.view", "true"));
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
