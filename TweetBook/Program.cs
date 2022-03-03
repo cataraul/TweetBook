@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using TweetBook.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using TweetBook.Domain;
+using FluentValidation.AspNetCore;
+using System.Reflection;
+using TweetBook.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +20,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IPostService, PostService>();
 
-builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>options.UseSqlite(connectionString));
 
 builder.Services.AddScoped<IIdentityService, IdentityService>();
-builder.Services.AddMvc();
+builder.Services.AddControllers();
+builder.Services.AddMvc(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+})
+    .AddFluentValidation(mvcConfiguration=>mvcConfiguration.RegisterValidatorsFromAssemblyContaining<Program>());
 
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
