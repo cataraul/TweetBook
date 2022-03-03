@@ -8,7 +8,6 @@ namespace TweetBook.Domain
        [ForeignKey(nameof(TagName))]
        public  virtual Tag Tag { get; set; }
 
-       [Key]
        public string TagName { get; set; }
 
        [ForeignKey(nameof(PostId))]

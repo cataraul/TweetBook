@@ -12,7 +12,7 @@ namespace TweetBook.Services
         {
             _dataContext = dataContext;
         }
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<IList<Post>> GetAllAsync()
         {
             return await _dataContext.Posts.Include(post => post.Tags).ToListAsync();
         }
