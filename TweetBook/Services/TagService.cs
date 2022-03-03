@@ -32,12 +32,13 @@ namespace TweetBook.Services
         }
         public async Task<Tag> GetAsync(string name)
         {
-            return await _dataContext.Tags.FirstOrDefaultAsync(t => t.Name == name);
+            return await _dataContext.Tags.FirstOrDefaultAsync(tag => tag.Name == name);
         }
         public async Task<bool> CreateAsync(Tag tag)
         {
             _dataContext.Tags.Add(tag);
             var created = await _dataContext.SaveChangesAsync();
+
             return created > 0;
         }
         public async Task<bool> UpdateAsync(Post updatedPost)

@@ -14,7 +14,6 @@ namespace TweetBook.Authorization
                 context.Succeed(requirement);
                 return Task.CompletedTask;
             }
-
             context.Fail();
             return Task.CompletedTask;
         }

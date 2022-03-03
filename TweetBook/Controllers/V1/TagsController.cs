@@ -19,18 +19,18 @@ namespace TweetBook.Controllers.V1
             _tagsService = tagsService;
         }
 
-        [HttpGet(ApiRoutes.Tags.GetAll)]
+        [HttpGet(ApiRoutes.Tags.TagsBase)]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _tagsService.GetAllAsync());
         }
 
-        [HttpPost(ApiRoutes.Tags.Create)]
+        [HttpPost(ApiRoutes.Tags.TagsBase)]
         public async Task<IActionResult> CreateAsync(CreateTagRequest request)
         {
             var newTag = new Tag
             {
-                Name = request.tagName,
+                Name = request.TagName,
                 CreatorId = HttpContext.GetUserId(),
                 CreatedOn = DateTime.UtcNow,
             };
@@ -42,7 +42,7 @@ namespace TweetBook.Controllers.V1
             }
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var locationUri = baseUrl + "/" + ApiRoutes.Tags.Get.Replace("{tagName}", newTag.Name);
+            var locationUri = baseUrl + "/" + ApiRoutes.Tags.TagsBase.Replace("{tagName}", newTag.Name);
             return Created(locationUri, newTag);
         }
         [HttpDelete(ApiRoutes.Tags.Delete)]

@@ -2,6 +2,6 @@
 {
     public class CreateTagRequest
     {
-        public string tagName { get; set; } 
+        public string TagName { get; set; } 
     }
 }

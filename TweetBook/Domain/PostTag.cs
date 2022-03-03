@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TweetBook.Domain
 {
@@ -6,8 +7,13 @@ namespace TweetBook.Domain
     {
        [ForeignKey(nameof(TagName))]
        public  virtual Tag Tag { get; set; }
+
+       [Key]
        public string TagName { get; set; }
+
+       [ForeignKey(nameof(PostId))]
        public  virtual Post Post { get; set; }
+
        public Guid PostId { get; set; }
     }
 }
