@@ -9,7 +9,7 @@ using TweetBook.Services;
 
 namespace TweetBook.Controllers.V1
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Poster")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TagsController : ControllerBase
     {
         private readonly ITagsService<Tag, string> _tagsService;
@@ -46,7 +46,7 @@ namespace TweetBook.Controllers.V1
             return Created(locationUri, newTag);
         }
         [HttpDelete(ApiRoutes.Tags.Delete)]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "MustWorkForRaul")]
         public async Task<IActionResult> Delete([FromRoute]string tagName)
         {
             var deleted = await _tagsService.DeleteAsync(tagName);

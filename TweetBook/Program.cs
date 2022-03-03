@@ -7,7 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
+using TweetBook.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using TweetBook.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,8 @@ builder.Services.AddMvc();
 builder.Services.AddIdentityCore<IdentityUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
+
+builder.Services.AddScoped<ITagsService<Tag,string>, TagService>();
 
 //Bearer Token Configuration
 var jwtSettings = new JwtSettings();
@@ -55,7 +59,15 @@ builder.Services.AddAuthentication(configureOptions: x =>
         x.TokenValidationParameters = tokenValidationParameters;
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MustWorkForRaul", policy =>
+    {
+        policy.AddRequirements(new WorksForCompanyRequirement("rauls.com"));
+    });
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
 
 
 builder.Services.AddEndpointsApiExplorer();
