@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TweetBook.Data;
 using TweetBook.Domain;
 
@@ -9,11 +8,14 @@ namespace TweetBook.Services
     {
 
         private readonly DataContext _dataContext;
-
         public PostService(DataContext dataContext)
         {
             _dataContext = dataContext;
-        } 
+        }
+        public async Task<IList<Post>> GetAllAsync()
+        {
+            return await _dataContext.Posts.Include(post => post.Tags).ToListAsync();
+        }
 
         public async Task<List<Post>> GetPostsAsync()
         {
@@ -28,6 +30,7 @@ namespace TweetBook.Services
         public async Task<bool> CreatePostAsync(Post post)
         {
             await _dataContext.Posts.AddAsync(post);
+            _dataContext.Posts.Add(post);
             var created = await _dataContext.SaveChangesAsync();
             return created > 0;
         }

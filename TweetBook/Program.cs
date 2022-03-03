@@ -7,6 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
+using TweetBook.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using TweetBook.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +23,13 @@ builder.Services.AddDbContext<DataContext>(options =>options.UseSqlite(connectio
 
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 builder.Services.AddMvc();
-builder.Services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<DataContext>();
+
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<DataContext>();
+
+builder.Services.AddScoped<ITagsService<Tag,string>, TagService>();
+
 //Bearer Token Configuration
 var jwtSettings = new JwtSettings();
 builder.Configuration.Bind(key:nameof(jwtSettings),jwtSettings);
@@ -49,6 +58,16 @@ builder.Services.AddAuthentication(configureOptions: x =>
         x.SaveToken = true;
         x.TokenValidationParameters = tokenValidationParameters;
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MustWorkForRaul", policy =>
+    {
+        policy.AddRequirements(new WorksForCompanyRequirement("rauls.com"));
+    });
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -82,6 +101,24 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 var app = builder.Build();
+//Adding Roles
+var serviceScope = app.Services.CreateScope();
+
+var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+await dbContext.Database.MigrateAsync();
+var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+if (!await roleManager.RoleExistsAsync("Admin"))
+{
+    var adminRole = new IdentityRole("Admin");
+    await roleManager.CreateAsync(adminRole);
+}
+
+if (!await roleManager.RoleExistsAsync("Poster"))
+{
+    var posterRole = new IdentityRole("Poster");
+    await roleManager.CreateAsync(posterRole);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

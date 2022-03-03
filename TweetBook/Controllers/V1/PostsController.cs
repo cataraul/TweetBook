@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TweetBook.Contract;
 using TweetBook.Contract.V1.Requests;
+using TweetBook.Contract.V1.Responses;
 using TweetBook.Domain;
 using TweetBook.Extensions;
 
@@ -20,7 +21,14 @@ namespace TweetBook.Controllers
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _postService.GetPostsAsync());
+            var posts = await _postService.GetAllAsync();
+
+            return Ok(posts.Select(post => new PostResponse
+            {
+                Id = post.Id,
+                Name = post.Name,
+                Tags = post.Tags.Select(postTag => postTag.TagName)
+            }));
         }
 
         [HttpPut(ApiRoutes.Posts.Update)]
@@ -35,13 +43,23 @@ namespace TweetBook.Controllers
 
             var post = await _postService.GetPostByIdAsync(postId);
             post.Name = request.Name;
+            post.Tags = request.Tags.Select(tagName => new PostTag
+            {
+                TagName = tagName,
+                PostId = post.Id,
+            }).ToList();
 
-           var updated = await _postService.UpdatePostAsync(post);
+            if (!await _postService.UpdatePostAsync(post))
+            {
+                return NotFound();
+            }
 
-            if(updated)
-                return Ok(post);
-
-            return NotFound();
+            return Ok(new PostResponse
+            {
+                Id = post.Id,
+                Name = post.Name,
+                Tags = post.Tags.Select(postTag => postTag.TagName)
+            });
 
         }
 
@@ -73,18 +91,25 @@ namespace TweetBook.Controllers
             if (post == null)
                 return NotFound();
 
-            return Ok(post);
+            return Ok(new PostResponse
+            {
+                Id = post.Id,
+                Name = post.Name,
+                Tags = post.Tags.Select(postTag => postTag.TagName)
+            });
 
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
         public async Task<IActionResult> Create([FromBody] CreatePostRequest postRequest)
         {
-
-            var post = new Post 
-            { 
+            var newPostId = Guid.NewGuid();
+            var post = new Post
+            {
+                Id = newPostId,
                 Name = postRequest.Name,
-                UserId = HttpContext.GetUserId()
+                UserId = HttpContext.GetUserId(),
+                Tags = postRequest.Tags.Select(tagName => new PostTag { TagName = tagName, PostId = newPostId }).ToList()
             };
 
             await _postService.CreatePostAsync(post);
@@ -92,7 +117,14 @@ namespace TweetBook.Controllers
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{postId}", post.Id.ToString());
 
-            return Created(locationUri, post);
+            var response = new PostResponse
+            {
+                Id = post.Id,
+                Name = post.Name,
+                Tags = post.Tags.Select(postTag => postTag.TagName)
+            };
+
+            return Created(locationUri, response);
         }
     }
 }
