@@ -1,4 +1,7 @@
-﻿namespace TweetBook.Contract.V1.Responses
+﻿using System.Collections.Generic;
+using TweetBook.Domain;
+
+namespace TweetBook.Contract.V1.Responses
 {
     public class PostResponse
     {
@@ -6,6 +9,8 @@
 
         public string Name { get; set; }
 
-        public IEnumerable<string> Tags { get; set; }
+        public string UserId { get; set; }
+
+        public IEnumerable<TagResponse> Tags { get; set; }
     }
 }

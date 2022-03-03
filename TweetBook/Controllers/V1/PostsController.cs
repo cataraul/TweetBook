@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TweetBook.Contract;
@@ -13,22 +14,18 @@ namespace TweetBook.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
-        public PostsController(IPostService postService)
+        private readonly IMapper _mapper;
+        public PostsController(IPostService postService,IMapper mapper)
         {
             _postService = postService;
+            _mapper = mapper;
         }
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public async Task<IActionResult> GetAll()
         {
             var posts = await _postService.GetAllAsync();
-
-            return Ok(posts.Select(post => new PostResponse
-            {
-                Id = post.Id,
-                Name = post.Name,
-                Tags = post.Tags.Select(postTag => postTag.TagName)
-            }));
+            return Ok(_mapper.Map<List<PostResponse>>(posts));
         }
 
         [HttpPut(ApiRoutes.Posts.Update)]
@@ -54,12 +51,7 @@ namespace TweetBook.Controllers
                 return NotFound();
             }
 
-            return Ok(new PostResponse
-            {
-                Id = post.Id,
-                Name = post.Name,
-                Tags = post.Tags.Select(postTag => postTag.TagName)
-            });
+            return Ok(_mapper.Map<PostResponse>(post));
 
         }
 
@@ -91,12 +83,7 @@ namespace TweetBook.Controllers
             if (post == null)
                 return NotFound();
 
-            return Ok(new PostResponse
-            {
-                Id = post.Id,
-                Name = post.Name,
-                Tags = post.Tags.Select(postTag => postTag.TagName)
-            });
+            return Ok(_mapper.Map<PostResponse>(post));
 
         }
 
@@ -117,14 +104,7 @@ namespace TweetBook.Controllers
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Posts.Get.Replace("{postId}", post.Id.ToString());
 
-            var response = new PostResponse
-            {
-                Id = post.Id,
-                Name = post.Name,
-                Tags = post.Tags.Select(postTag => postTag.TagName)
-            };
-
-            return Created(locationUri, response);
+            return Created(locationUri, _mapper.Map<PostResponse>(post));
         }
     }
 }
