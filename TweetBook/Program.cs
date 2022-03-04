@@ -13,6 +13,7 @@ using TweetBook.Domain;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 using TweetBook.Filters;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +88,9 @@ builder.Services.AddSwaggerGen(x =>
     {
         {"Bearer",new string[0]}
     };
+
+    x.ExampleFilters();
+
     x.AddSecurityDefinition(name: "Bearer", new OpenApiSecurityScheme
     {
         Description= "JWT Authorization header using the bearer scheme",
@@ -108,9 +112,16 @@ builder.Services.AddSwaggerGen(x =>
        Array.Empty<string>()
        }
     });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    x.IncludeXmlComments(xmlPath);
+
 });
 
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 var app = builder.Build();
+
 //Adding Roles
 var serviceScope = app.Services.CreateScope();
 
