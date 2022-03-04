@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TweetBook.Domain;
+﻿
 
 namespace TweetBook.Contract.V1.Responses
 {

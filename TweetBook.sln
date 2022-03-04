@@ -5,6 +5,12 @@ VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TweetBook", "TweetBook\TweetBook.csproj", "{43883235-1F0D-4F85-B430-B49935D8EC53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweetbook.Sdk", "Tweetbook.Sdk\Tweetbook.Sdk.csproj", "{B127B489-221C-45CA-968D-5AAABF03AE6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweetbook.Sdk.Sample", "Tweetbook.Sdk.Sample\Tweetbook.Sdk.Sample.csproj", "{1DC568E3-014E-42A1-878F-085995F71E24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweetbook.Contracts", "Tweetbook.Contracts\Tweetbook.Contracts.csproj", "{B76381C9-6C81-47E4-BD3B-A8F7C7B0D8D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{43883235-1F0D-4F85-B430-B49935D8EC53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43883235-1F0D-4F85-B430-B49935D8EC53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43883235-1F0D-4F85-B430-B49935D8EC53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B127B489-221C-45CA-968D-5AAABF03AE6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B127B489-221C-45CA-968D-5AAABF03AE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B127B489-221C-45CA-968D-5AAABF03AE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B127B489-221C-45CA-968D-5AAABF03AE6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DC568E3-014E-42A1-878F-085995F71E24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC568E3-014E-42A1-878F-085995F71E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC568E3-014E-42A1-878F-085995F71E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC568E3-014E-42A1-878F-085995F71E24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76381C9-6C81-47E4-BD3B-A8F7C7B0D8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B76381C9-6C81-47E4-BD3B-A8F7C7B0D8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B76381C9-6C81-47E4-BD3B-A8F7C7B0D8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76381C9-6C81-47E4-BD3B-A8F7C7B0D8D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
