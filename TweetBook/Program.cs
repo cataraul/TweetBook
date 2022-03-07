@@ -12,19 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.InstallServicesInAssembly();
 
-builder.Services.AddScoped<IIdentityService, IdentityService>();
-builder.Services.AddMvc(options =>
+static void JwtConfiguration(WebApplicationBuilder? builder)
 {
-    options.Filters.Add<ValidationFilter>();
-})
+    var jwtSettings = new JwtSettings();
+
+    builder.Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
+}
+
+static void AddServices(WebApplicationBuilder? builder)
+{
+    builder.Services.AddScoped<IIdentityService, IdentityService>();
+    builder.Services.AddMvc(options =>
+    {
+        options.Filters.Add<ValidationFilter>();
+    })
     .AddFluentValidation(mvcConfiguration => mvcConfiguration.RegisterValidatorsFromAssemblyContaining<Program>());
-
-//Bearer Token Configuration
-var jwtSettings = new JwtSettings();
-builder.Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
-
-//Automapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+}
 
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 var app = builder.Build();
