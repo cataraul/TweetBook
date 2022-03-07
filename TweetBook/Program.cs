@@ -1,55 +1,56 @@
-﻿global using TweetBook.Data;
+﻿global using Microsoft.EntityFrameworkCore;
+global using TweetBook.Data;
 global using TweetBook.Services;
-global using Microsoft.EntityFrameworkCore;
-using TweetBook.Options;
-using Microsoft.AspNetCore.Identity;
 using FluentValidation.AspNetCore;
-using TweetBook.Filters;
+using Microsoft.AspNetCore.Identity;
 using Swashbuckle.AspNetCore.Filters;
+using TweetBook.Filters;
 using TweetBook.Installers;
+using TweetBook.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.InstallServicesInAssembly();
 
 builder.Services.AddScoped<IIdentityService, IdentityService>();
-builder.Services.AddControllers();
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add<ValidationFilter>();
 })
-    .AddFluentValidation(mvcConfiguration=>mvcConfiguration.RegisterValidatorsFromAssemblyContaining<Program>());
+    .AddFluentValidation(mvcConfiguration => mvcConfiguration.RegisterValidatorsFromAssemblyContaining<Program>());
 
 //Bearer Token Configuration
 var jwtSettings = new JwtSettings();
-builder.Configuration.Bind(key:nameof(jwtSettings),jwtSettings);
+builder.Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
 
 //Automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 var app = builder.Build();
 
 //Adding Roles
-var serviceScope = app.Services.CreateScope();
-
-var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-await dbContext.Database.MigrateAsync();
-var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-if (!await roleManager.RoleExistsAsync("Admin"))
+static async Task AddRolesAsync(WebApplication? app)
 {
-    var adminRole = new IdentityRole("Admin");
-    await roleManager.CreateAsync(adminRole);
+    var serviceScope = app.Services.CreateScope();
+
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+    await dbContext.Database.MigrateAsync();
+    var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        var adminRole = new IdentityRole("Admin");
+        await roleManager.CreateAsync(adminRole);
+    }
+
+    if (!await roleManager.RoleExistsAsync("Poster"))
+    {
+        var posterRole = new IdentityRole("Poster");
+        await roleManager.CreateAsync(posterRole);
+    }
 }
 
-if (!await roleManager.RoleExistsAsync("Poster"))
-{
-    var posterRole = new IdentityRole("Poster");
-    await roleManager.CreateAsync(posterRole);
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
