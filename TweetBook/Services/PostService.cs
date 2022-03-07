@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TweetBook.Data;
-using TweetBook.Domain;
+﻿using TweetBook.Domain;
 
 namespace TweetBook.Services
 {
@@ -12,9 +10,14 @@ namespace TweetBook.Services
         {
             _dataContext = dataContext;
         }
-        public async Task<IList<Post>> GetAllAsync()
+        public async Task<IList<Post>> GetAllAsync(PaginationFilter? paginationFilter = null)
         {
-            return await _dataContext.Posts.Include(post => post.Tags).ToListAsync();
+            if (paginationFilter == null)
+            {
+                return await _dataContext.Posts.Include(post => post.Tags).ToListAsync();
+            }
+            var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
+            return await _dataContext.Posts.Include(post => post.Tags).Skip(skip).Take(paginationFilter.PageSize).ToListAsync();
         }
 
         public async Task<List<Post>> GetPostsAsync()
@@ -37,24 +40,24 @@ namespace TweetBook.Services
 
         public async Task<bool> UpdatePostAsync(Post postToUpdate)
         {
-             _dataContext.Posts.Update(postToUpdate);
+            _dataContext.Posts.Update(postToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
             return updated > 0;
         }
-        
+
         public async Task<bool> DeletePostAsync(Guid postId)
         {
-            var post  = await GetPostByIdAsync(postId);
+            var post = await GetPostByIdAsync(postId);
 
             if (post == null)
                 return false;
 
-             _dataContext.Posts.Remove(post);
+            _dataContext.Posts.Remove(post);
             var deleted = await _dataContext.SaveChangesAsync();
             return deleted > 0;
         }
 
-        public async Task<bool> UserOwnsPostAsync(Guid postId,string userId)
+        public async Task<bool> UserOwnsPostAsync(Guid postId, string userId)
         {
             var post = await _dataContext.Posts.AsNoTracking().SingleOrDefaultAsync(x => x.Id == postId);
 
@@ -63,7 +66,7 @@ namespace TweetBook.Services
                 return false;
             }
 
-            if(post.UserId != userId)
+            if (post.UserId != userId)
             {
                 return false;
             }
