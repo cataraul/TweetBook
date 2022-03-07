@@ -43,7 +43,7 @@ namespace TweetBook.Cache
             }
             var executedContext = await next();
 
-            if(executedContext.Result is OkObjectResult okObjectResult)
+            if (executedContext.Result is OkObjectResult okObjectResult)
             {
                 await cachedService.CacheResponseAsync(cacheKey, okObjectResult.Value, TimeSpan.FromSeconds(_timeToLiveSeconds));
             }
@@ -55,7 +55,7 @@ namespace TweetBook.Cache
 
             keyBuilder.Append($"{request.Path}");
 
-            foreach(var (key,value) in request.Query.OrderBy(x => x.Key))
+            foreach (var (key, value) in request.Query.OrderBy(x => x.Key))
             {
                 keyBuilder.Append($"|{key}-{value}");
             }
