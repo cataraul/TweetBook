@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TweetBook.Data;
 
@@ -10,9 +11,10 @@ using TweetBook.Data;
 namespace TweetBook.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220304140535_posttagTag")]
+    partial class posttagTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.2");
@@ -240,8 +242,6 @@ namespace TweetBook.Data.Migrations
 
                     b.HasKey("PostId", "TagName");
 
-                    b.HasIndex("TagName");
-
                     b.ToTable("PostTags");
                 });
 
@@ -361,21 +361,11 @@ namespace TweetBook.Data.Migrations
 
             modelBuilder.Entity("TweetBook.Domain.PostTag", b =>
                 {
-                    b.HasOne("TweetBook.Domain.Post", "Post")
+                    b.HasOne("TweetBook.Domain.Post", null)
                         .WithMany("Tags")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TweetBook.Domain.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("TweetBook.Domain.RefreshToken", b =>

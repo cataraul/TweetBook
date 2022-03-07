@@ -19,7 +19,6 @@ namespace TweetBook.Data
             base.OnModelCreating(builder);
 
             builder.Entity<PostTag>()
-                .Ignore(postTag => postTag.Post)
                 .HasKey(postTag => new { postTag.PostId, postTag.TagName });
         }
     }

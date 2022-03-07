@@ -1,124 +1,60 @@
-﻿global using TweetBook.Data;
+﻿global using Microsoft.EntityFrameworkCore;
+global using TweetBook.Data;
 global using TweetBook.Services;
-global using Microsoft.EntityFrameworkCore;
-using TweetBook.Options;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
-using TweetBook.Authorization;
-using Microsoft.AspNetCore.Authorization;
-using TweetBook.Domain;
+using Swashbuckle.AspNetCore.Filters;
+using TweetBook.Filters;
+using TweetBook.Installers;
+using TweetBook.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.InstallServicesInAssembly();
 
-builder.Services.AddScoped<IPostService, PostService>();
-
-builder.Services.AddControllers();
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<DataContext>(options =>options.UseSqlite(connectionString));
-
-builder.Services.AddScoped<IIdentityService, IdentityService>();
-builder.Services.AddMvc();
-
-builder.Services.AddIdentityCore<IdentityUser>()
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>();
-
-builder.Services.AddScoped<ITagsService<Tag,string>, TagService>();
-
-//Bearer Token Configuration
-var jwtSettings = new JwtSettings();
-builder.Configuration.Bind(key:nameof(jwtSettings),jwtSettings);
-builder.Services.AddSingleton(jwtSettings);
-
-var tokenValidationParameters = new TokenValidationParameters
+static void JwtConfiguration(WebApplicationBuilder? builder)
 {
-    ValidateIssuerSigningKey = true,
-    IssuerSigningKey = new SymmetricSecurityKey(key: Encoding.ASCII.GetBytes(jwtSettings.Secret)),
-    ValidateIssuer = false,
-    ValidateAudience = false,
-    RequireExpirationTime = false,
-    ValidateLifetime = true
-};
+    var jwtSettings = new JwtSettings();
 
-builder.Services.AddSingleton(tokenValidationParameters);
+    builder.Configuration.Bind(key: nameof(jwtSettings), jwtSettings);
+}
 
-builder.Services.AddAuthentication(configureOptions: x =>
+static void AddServices(WebApplicationBuilder? builder)
 {
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(x =>
+    builder.Services.AddScoped<IIdentityService, IdentityService>();
+    builder.Services.AddMvc(options =>
     {
-        x.SaveToken = true;
-        x.TokenValidationParameters = tokenValidationParameters;
-    });
+        options.Filters.Add<ValidationFilter>();
+    })
+    .AddFluentValidation(mvcConfiguration => mvcConfiguration.RegisterValidatorsFromAssemblyContaining<Program>());
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+}
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("MustWorkForRaul", policy =>
-    {
-        policy.AddRequirements(new WorksForCompanyRequirement("rauls.com"));
-    });
-});
-
-builder.Services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
-
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(x =>
-{
-    var security = new Dictionary<string, IEnumerable<string>>
-    {
-        {"Bearer",new string[0]}
-    };
-    x.AddSecurityDefinition(name: "Bearer", new OpenApiSecurityScheme
-    {
-        Description= "JWT Authorization header using the bearer scheme",
-        Name = "Authorization",
-        In=ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey
-    });
-    x.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-     {
-        new OpenApiSecurityScheme
-          {
-               Reference = new OpenApiReference
-                 {
-                   Type = ReferenceType.SecurityScheme,
-                   Id = "Bearer"
-                  }
-          },
-       Array.Empty<string>()
-       }
-    });
-});
-
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 var app = builder.Build();
+
 //Adding Roles
-var serviceScope = app.Services.CreateScope();
-
-var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-await dbContext.Database.MigrateAsync();
-var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-if (!await roleManager.RoleExistsAsync("Admin"))
+static async Task AddRolesAsync(WebApplication? app)
 {
-    var adminRole = new IdentityRole("Admin");
-    await roleManager.CreateAsync(adminRole);
+    var serviceScope = app.Services.CreateScope();
+
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+    await dbContext.Database.MigrateAsync();
+    var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        var adminRole = new IdentityRole("Admin");
+        await roleManager.CreateAsync(adminRole);
+    }
+
+    if (!await roleManager.RoleExistsAsync("Poster"))
+    {
+        var posterRole = new IdentityRole("Poster");
+        await roleManager.CreateAsync(posterRole);
+    }
 }
 
-if (!await roleManager.RoleExistsAsync("Poster"))
-{
-    var posterRole = new IdentityRole("Poster");
-    await roleManager.CreateAsync(posterRole);
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
