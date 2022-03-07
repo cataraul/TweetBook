@@ -26,7 +26,7 @@ namespace TweetBook.Controllers.V1
         /// <summary>
         /// Returns all the tags in the system.
         /// </summary>
-        /// <response code="200">Returns all the tags in the system</response>
+        /// <response code="200">Returns all the tags in the system.</response>
         [HttpGet(ApiRoutes.Tags.TagsBase)]
         public async Task<IActionResult> GetAll()
         {
@@ -37,10 +37,10 @@ namespace TweetBook.Controllers.V1
         }
 
         /// <summary>
-        /// Creates a tag in the system
+        /// Creates a tag in the system.
         /// </summary>
-        /// <response code="201">Creates a tag in the system</response>
-        /// <response code="400">Unable to create the tag due to validation error</response>
+        /// <response code="201">Creates a tag in the system.</response>
+        /// <response code="400">Unable to create the tag due to validation error.</response>
         [HttpPost(ApiRoutes.Tags.TagsBase)]
         [ProducesResponseType(typeof(TagResponse), 201)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
