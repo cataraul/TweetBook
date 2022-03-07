@@ -11,9 +11,9 @@ namespace TweetBook.Installers
             builder.Services.AddSwaggerGen(x =>
             {
                 var security = new Dictionary<string, IEnumerable<string>>
-    {
-        {"Bearer",new string[0]}
-    };
+                {
+                    {"Bearer",new string[0]}
+                };
 
                 x.ExampleFilters();
 
@@ -25,24 +25,23 @@ namespace TweetBook.Installers
                     Type = SecuritySchemeType.ApiKey
                 });
                 x.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-     {
-        new OpenApiSecurityScheme
-          {
-               Reference = new OpenApiReference
+                {
                  {
-                   Type = ReferenceType.SecurityScheme,
-                   Id = "Bearer"
-                  }
-          },
-       Array.Empty<string>()
-       }
-    });
+                    new OpenApiSecurityScheme
+                      {
+                           Reference = new OpenApiReference
+                             {
+                               Type = ReferenceType.SecurityScheme,
+                               Id = "Bearer"
+                             }
+                      },
+                   Array.Empty<string>()
+                 }
+                });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 x.IncludeXmlComments(xmlPath);
-
             });
         }
     }
