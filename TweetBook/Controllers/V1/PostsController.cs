@@ -52,7 +52,6 @@ namespace TweetBook.Controllers
             }
 
             return Ok(_mapper.Map<PostResponse>(post));
-
         }
 
         [HttpDelete(ApiRoutes.Posts.Delete)]
@@ -84,7 +83,6 @@ namespace TweetBook.Controllers
                 return NotFound();
 
             return Ok(_mapper.Map<PostResponse>(post));
-
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
