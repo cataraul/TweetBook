@@ -24,7 +24,7 @@ namespace TweetBook.Controllers.V1
             _mapper = mapper;
         }
         /// <summary>
-        /// Returns all the tags in the system
+        /// Returns all the tags in the system.
         /// </summary>
         /// <response code="200">Returns all the tags in the system</response>
         [HttpGet(ApiRoutes.Tags.TagsBase)]

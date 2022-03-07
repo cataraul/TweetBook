@@ -38,4 +38,4 @@ var updatedPost = await tweetbookApi.UpdateAsync(createdPost.Content.Id, new Upd
     Name = "This is updated by the SDK"
 });
 
-var deletePost = await tweetbookApi.DeleteAsync(updatedPost.Content.Id);
+var deletePost = await tweetbookApi.DeleteAsync(createdPost.Content.Id);
