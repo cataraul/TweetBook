@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TweetBook.Cache;
 using TweetBook.Contract;
 using TweetBook.Contract.V1.Requests;
 using TweetBook.Contract.V1.Responses;
@@ -22,6 +23,7 @@ namespace TweetBook.Controllers
         }
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
+        [Cached(600)]
         public async Task<IActionResult> GetAll()
         {
             var posts = await _postService.GetAllAsync();
@@ -72,11 +74,10 @@ namespace TweetBook.Controllers
             return NotFound();
         }
 
-
         [HttpGet(ApiRoutes.Posts.Get)]
+        [Cached(600)]
         public async Task<IActionResult> Get([FromRoute] Guid postId)
         {
-
             var post = await _postService.GetPostByIdAsync(postId);
 
             if (post == null)
