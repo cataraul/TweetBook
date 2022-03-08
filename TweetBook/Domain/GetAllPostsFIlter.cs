@@ -1,6 +1,6 @@
 ﻿namespace TweetBook.Domain
 {
-    public class GetAllPostsFIlter
+    public class GetAllPostsFilter
     {
         public string UserId { get; set; }
     }

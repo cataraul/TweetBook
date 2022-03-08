@@ -10,7 +10,7 @@ namespace TweetBook.Services
         {
             _dataContext = dataContext;
         }
-        public async Task<IList<Post>> GetAllAsync(GetAllPostsFIlter? filter = null, PaginationFilter? paginationFilter = null)
+        public async Task<IList<Post>> GetAllAsync(GetAllPostsFilter? filter = null, PaginationFilter? paginationFilter = null)
         {
             var queryable = _dataContext.Posts.AsQueryable();
 
@@ -79,7 +79,7 @@ namespace TweetBook.Services
             return true;
         }
 
-        private static IQueryable<Post> AddFiltersOnQuery(GetAllPostsFIlter filter, IQueryable<Post> queryable)
+        private static IQueryable<Post> AddFiltersOnQuery(GetAllPostsFilter filter, IQueryable<Post> queryable)
         {
             if (!string.IsNullOrEmpty(filter?.UserId))
             {

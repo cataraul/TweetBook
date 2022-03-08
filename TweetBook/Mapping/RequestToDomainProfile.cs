@@ -9,7 +9,7 @@ namespace TweetBook.Mapping
         public RequestToDomainProfile()
         {
             CreateMap<PaginationQuery, PaginationFilter>();
-            CreateMap<GetAllPostsQuery, GetAllPostsFIlter>();
+            CreateMap<GetAllPostsQuery, GetAllPostsFilter>();
         }
     }
 }
