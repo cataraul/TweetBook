@@ -2,6 +2,10 @@
 {
     public class PaginationQuery
     {
+        public int PageNumer { get; set; }
+
+        public int PageSize { get; set; }
+
         public PaginationQuery()
         {
             PageNumer = 1;
@@ -13,9 +17,5 @@
             PageNumer = pageNumber;
             PageSize = pageSize;
         }
-
-        public int PageNumer { get; set; }
-
-        public int PageSize { get; set; }
     }
 }

@@ -10,6 +10,5 @@ namespace TweetBook.Mapping
         {
             CreateMap<PaginationQuery, PaginationFilter>();
         }
-
     }
 }
