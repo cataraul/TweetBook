@@ -49,6 +49,14 @@ namespace TweetBook.Installers
             });
 
             builder.Services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
+
+            builder.Services.AddSingleton<IUriService>(provider =>
+            {
+                var accessor = provider.GetRequiredService<IHttpContextAccessor>();
+                var request = accessor.HttpContext.Request;
+                var absoluteUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent(), "/");
+                return new UriService(absoluteUri);
+            });
         }
     }
 }
