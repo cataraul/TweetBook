@@ -2,8 +2,11 @@
 global using TweetBook.Data;
 global using TweetBook.Services;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Filters;
+using Tweetbook.Contracts.HealthChecks;
 using TweetBook.Filters;
 using TweetBook.Installers;
 using TweetBook.Options;
@@ -60,7 +63,27 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context,report) =>
+    {
+        context.Response.ContentType = "application/json";
 
+        var response = new HealthCheckResponse
+        {
+            Status = report.Status.ToString(),
+            Checks = report.Entries.Select(x => new HealthCheck
+            {
+                Component = x.Key,
+                Status = x.Value.Status.ToString(),
+                Description = x.Value.Description,
+            }),
+            Duration = report.TotalDuration
+        };
+
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+    }
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
