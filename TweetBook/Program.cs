@@ -65,7 +65,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHealthChecks("/health", new HealthCheckOptions
 {
-    ResponseWriter = async (context,report) =>
+    ResponseWriter = async (context, report) =>
     {
         context.Response.ContentType = "application/json";
 
@@ -92,3 +92,6 @@ app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
+
+// Make the implicit Program class public so test projects can access it
+public partial class Program { }
