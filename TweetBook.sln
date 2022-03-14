@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweetbook.Sdk.Sample", "Twe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweetbook.Contracts", "Tweetbook.Contracts\Tweetbook.Contracts.csproj", "{B76381C9-6C81-47E4-BD3B-A8F7C7B0D8D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweetbok.IntegrationTest", "Tweetbok.IntegrationTest\Tweetbok.IntegrationTest.csproj", "{10B53212-32E5-4AE8-8A6D-C8A899B5AD45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweetbok.IntegrationTests", "Tweetbok.IntegrationTest\Tweetbok.IntegrationTests.csproj", "{10B53212-32E5-4AE8-8A6D-C8A899B5AD45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
